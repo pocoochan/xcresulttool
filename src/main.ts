@@ -8,7 +8,6 @@ import {Formatter} from './formatter'
 import {Octokit} from '@octokit/action'
 import {glob} from 'glob'
 import {promises} from 'fs'
-import {getXcodeVersion} from './xcode'
 const {stat} = promises
 
 async function run(): Promise<void> {
@@ -158,14 +157,9 @@ async function mergeResultBundle(
   inputPaths: string[],
   outputPath: string
 ): Promise<void> {
-  const xcodeVersion = await getXcodeVersion();
-  const args = ['xcresulttool', 'merge']
+  const args = ['xcresulttool', 'merge', '--legacy', ]
     .concat(inputPaths)
     .concat(['--output-path', outputPath])
-
-    if (xcodeVersion >= 16) {
-      args.push('--legacy');
-    }
   
   const options = {
     silent: true
